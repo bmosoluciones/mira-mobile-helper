@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- SPDX-FileCopyrightText: 2025 - 2026 BMO Soluciones, S.A. -->
+<resources>
+    <string name="app_name">MIRA Mobile Helper</string>
+    <string name="title_activity_main">MIRA Mobile Helper</string>
+    <string name="package_name">solutions.bmogroup.mira.mobilehelper</string>
+    <string name="custom_url_scheme">solutions.bmogroup.mira.mobilehelper</string>
+</resources>

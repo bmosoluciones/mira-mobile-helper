@@ -1,0 +1,1049 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+// SPDX-FileCopyrightText: 2025 - 2026 BMO Soluciones, S.A.
+
+/* ─────────────────────────────────────────────────────────────
+   MIRA Mobile Helper — Design Tokens & Theme
+   Colors match the MIRA desktop application (qt-material dark)
+   ───────────────────────────────────────────────────────────── */
+
+/* Shared tokens (same in every theme) */
+:root {
+  --mira-font: 'Segoe UI', 'Trebuchet MS', 'Gill Sans', sans-serif;
+
+  /* KPI card — same dark navy as the desktop dashboard cards */
+  --kpi-bg: #1e2d3d;
+  --kpi-border: #2a3f55;
+  --kpi-label: #94a3b8;
+  --kpi-text: #e2e8f0;
+  --income-clr: #57cc99;   /* teal-green — matches desktop income */
+  --expense-clr: #fc8181;  /* coral-red  — matches desktop expense */
+
+  /* Primary action colour — matches desktop SEND button */
+  --primary: #1565c0;
+  --primary-light: #1976d2;
+  --primary-text: #ffffff;
+
+  /* Danger */
+  --danger: #ef4444;
+
+  /* Misc */
+  --radius-sm: 0.5rem;
+  --radius-md: 0.85rem;
+  --radius-lg: 1.25rem;
+  --radius-pill: 999px;
+  --transition: 140ms ease;
+}
+
+/* ── Light theme (default) ── */
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+  --bg: #eef2f7;
+  --surface: #ffffff;
+  --surface-raised: #f8fafc;
+  --text: #1a202c;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --input-bg: #f1f5f9;
+  --input-border: #cbd5e0;
+  --nav-bg: #ffffff;
+  --nav-shadow: 0 -1px 0 #e2e8f0;
+  --header-bg: #1e2d3d;   /* dark navy — matches desktop sidebar */
+  --header-text: #e2e8f0;
+  --toggle-chip-bg: #e2e8f0;
+  --toggle-chip-text: #475569;
+  --toggle-chip-active-bg: #1565c0;
+  --toggle-chip-active-text: #ffffff;
+  --tag-chip-bg: #e2e8f0;
+  --tag-chip-text: #475569;
+  --tag-selected-bg: #dbeafe;
+  --tag-selected-text: #1d4ed8;
+  --secondary-btn-bg: #dbeafe;
+  --secondary-btn-text: #1d4ed8;
+  --ghost-btn-bg: #f1f5f9;
+  --ghost-btn-text: #64748b;
+  --pending-border: #e2e8f0;
+  --error-clr: #dc2626;
+  --badge-bg: #dc2626;
+  --badge-text: #ffffff;
+}
+
+/* ── Dark theme ── */
+[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #0f1923;
+  --surface: #1a2535;
+  --surface-raised: #1e2d3d;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --border: #2d3748;
+  --input-bg: #1e2d3d;
+  --input-border: #374151;
+  --nav-bg: #1a2535;
+  --nav-shadow: 0 -1px 0 #2d3748;
+  --header-bg: #0f1923;
+  --header-text: #e2e8f0;
+  --toggle-chip-bg: #2d3748;
+  --toggle-chip-text: #94a3b8;
+  --toggle-chip-active-bg: #1565c0;
+  --toggle-chip-active-text: #ffffff;
+  --tag-chip-bg: #2d3748;
+  --tag-chip-text: #94a3b8;
+  --tag-selected-bg: #1e3a5f;
+  --tag-selected-text: #93c5fd;
+  --secondary-btn-bg: #1e3a5f;
+  --secondary-btn-text: #93c5fd;
+  --ghost-btn-bg: #2d3748;
+  --ghost-btn-text: #94a3b8;
+  --pending-border: #2d3748;
+  --error-clr: #fc8181;
+  --badge-bg: #dc2626;
+  --badge-text: #ffffff;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Reset & base
+   ───────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: var(--mira-font);
+  font-size: 15px;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  min-width: 320px;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   App shell — header + content + bottom nav
+   ───────────────────────────────────────────────────────────── */
+#app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 540px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── Top header ── */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  background: var(--header-bg);
+  color: var(--header-text);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.brand-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.brand-name {
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.theme-toggle {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-pill);
+  color: var(--header-text);
+  cursor: pointer;
+  padding: 0.35rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1;
+  transition: background var(--transition);
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.header-icon-link {
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-pill);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--header-text);
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.header-icon-link:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ── Scrollable content ── */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── Bottom navigation ── */
+.bottom-nav {
+  display: flex;
+  background: var(--nav-bg);
+  box-shadow: var(--nav-shadow);
+  flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
+  z-index: 100;
+}
+
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 0 0.5rem;
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 500;
+  gap: 0.2rem;
+  position: relative;
+  transition: color var(--transition);
+}
+
+.nav-item.active {
+  color: var(--primary-light);
+}
+
+.nav-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.nav-badge {
+  position: absolute;
+  top: 0.35rem;
+  right: calc(50% - 0.9rem);
+  background: var(--badge-bg);
+  color: var(--badge-text);
+  border-radius: var(--radius-pill);
+  font-size: 0.65rem;
+  min-width: 1.1rem;
+  height: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0.25rem;
+  font-weight: 700;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Screen layouts
+   ───────────────────────────────────────────────────────────── */
+.capture-layout,
+.pending-layout,
+.screen-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   KPI cards — dark navy, matches MIRA desktop dashboard cards
+   ───────────────────────────────────────────────────────────── */
+.kpi-section {
+  /* no card background — cards are the children */
+}
+
+.kpi-period {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+}
+
+.kpi-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.kpi-card {
+  background: var(--kpi-bg);
+  border: 1px solid var(--kpi-border);
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.kpi-label {
+  color: var(--kpi-label);
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.kpi-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.kpi-value.income {
+  color: var(--income-clr);
+}
+
+.kpi-value.expense {
+  color: var(--expense-clr);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   FAB (Floating Action Button)
+   ───────────────────────────────────────────────────────────── */
+.fab-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.fab-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary-light);
+}
+
+.fab {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--primary-text);
+  border: none;
+  cursor: pointer;
+  font-size: 1.6rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(21, 101, 192, 0.45);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.fab:hover,
+.fab:active {
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(21, 101, 192, 0.55);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Surface cards (panels)
+   ───────────────────────────────────────────────────────────── */
+.panel-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.panel-header h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.panel-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: 0.83rem;
+}
+
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--primary-light);
+  margin-bottom: 0.35rem;
+}
+
+.screen-title {
+  font-size: 1.35rem;
+  line-height: 1.2;
+  margin-bottom: 0.4rem;
+}
+
+.segmented-row,
+.settings-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.secondary-button.selected {
+  background: var(--primary);
+  color: var(--primary-text);
+}
+
+.setup-status {
+  margin-top: 0.65rem;
+  text-align: left;
+}
+
+.setup-master-data-summary {
+  margin-top: 0.65rem;
+  color: var(--income-clr);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.setup-finish-button {
+  margin-top: 0.85rem;
+}
+
+.last-sync-hint {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  margin: -0.35rem 0 0.75rem 1.65rem;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Chat section
+   ───────────────────────────────────────────────────────────── */
+.chat-textarea {
+  width: 100%;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  color: var(--text);
+  resize: none;
+  min-height: 5rem;
+}
+
+.chat-mic-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.chat-textarea-wrap {
+  flex: 1;
+  position: relative;
+}
+
+.chat-mic-btn {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.chat-status-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.6rem;
+}
+
+.chat-avatar {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.chat-status-text {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+}
+
+.chat-action-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.chat-result {
+  margin-top: 0.55rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Form fields
+   ───────────────────────────────────────────────────────────── */
+.field-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.field-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.text-input,
+.chat-input {
+  width: 100%;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  padding: 0.6rem 0.75rem;
+  color: var(--text);
+  transition: border-color var(--transition);
+}
+
+.text-input:focus,
+.chat-input:focus {
+  outline: none;
+  border-color: var(--primary-light);
+}
+
+.chat-input.compact {
+  min-height: 5rem;
+  resize: vertical;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.checkbox-row {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Type toggle chips
+   ───────────────────────────────────────────────────────────── */
+.type-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.toggle-chip {
+  flex: 1;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-pill);
+  padding: 0.55rem 0.75rem;
+  font-size: 0.83rem;
+  font-weight: 600;
+  background: var(--toggle-chip-bg);
+  color: var(--toggle-chip-text);
+  transition: background var(--transition), color var(--transition);
+}
+
+.toggle-chip.active {
+  background: var(--toggle-chip-active-bg);
+  color: var(--toggle-chip-active-text);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Tag chips
+   ───────────────────────────────────────────────────────────── */
+.tag-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tag-chip {
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-pill);
+  padding: 0.35rem 0.7rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  background: var(--tag-chip-bg);
+  color: var(--tag-chip-text);
+  transition: background var(--transition), color var(--transition);
+}
+
+.tag-chip.selected {
+  background: var(--tag-selected-bg);
+  color: var(--tag-selected-text);
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Buttons
+   ───────────────────────────────────────────────────────────── */
+.primary-button,
+.sync-button,
+.secondary-button,
+.ghost-button,
+.qr-button {
+  border: none;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+  font-size: 0.88rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: opacity var(--transition), transform var(--transition);
+}
+
+.primary-button,
+.sync-button {
+  width: 100%;
+  background: var(--primary);
+  color: var(--primary-text);
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.qr-button {
+  width: 100%;
+  background: var(--primary-light);
+  color: var(--primary-text);
+  border-radius: var(--radius-pill);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.secondary-button {
+  background: var(--secondary-btn-bg);
+  color: var(--secondary-btn-text);
+}
+
+.ghost-button {
+  background: var(--ghost-btn-bg);
+  color: var(--ghost-btn-text);
+}
+
+.compact-button {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.action-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.action-column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Pending transactions list
+   ───────────────────────────────────────────────────────────── */
+.pending-list-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.pending-list-table th {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  padding: 0.4rem 0.5rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+
+.pending-list-table th:first-child {
+  width: 2rem;
+}
+
+.pending-row {
+  border-bottom: 1px solid var(--pending-border);
+  transition: background var(--transition);
+}
+
+.pending-row:hover {
+  background: var(--surface-raised);
+}
+
+.pending-row td {
+  padding: 0.55rem 0.5rem;
+  font-size: 0.82rem;
+  vertical-align: middle;
+}
+
+.pending-row input[type='checkbox'] {
+  accent-color: var(--primary);
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+}
+
+.pending-type-income {
+  color: var(--income-clr);
+  font-weight: 600;
+}
+
+.pending-type-expense {
+  color: var(--expense-clr);
+  font-weight: 600;
+}
+
+.pending-amount {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.pending-meta-small {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+.error-copy {
+  font-size: 0.75rem;
+  color: var(--error-clr);
+  margin-top: 0.15rem;
+}
+
+.pending-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--pending-border);
+}
+
+.pending-title {
+  font-weight: 600;
+  font-size: 0.88rem;
+}
+
+.pending-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Sync area (in PendingView)
+   ───────────────────────────────────────────────────────────── */
+.sync-buttons-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding-top: 0.5rem;
+}
+
+.sync-status-text {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+  min-height: 1.2em;
+}
+
+.pairing-collapse {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pairing-toggle-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   SVG / icon helpers
+   ───────────────────────────────────────────────────────────── */
+.btn-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Transaction Form — matches MIRA desktop TransactionDialog
+   ───────────────────────────────────────────────────────────── */
+
+/* Title — 28 px bold in desktop, scaled for mobile */
+.tx-form-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 0.85rem;
+  line-height: 1.2;
+}
+
+/* Type toggle — full-width pill pair, matches desktop buttons exactly */
+.type-toggle {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.toggle-chip {
+  flex: 1;
+  border-radius: var(--radius-pill);
+  padding: 0.65rem 1rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+
+/* Inactive state for both — white bg, blue border, blue text (matches desktop) */
+.toggle-chip-expense,
+.toggle-chip-income {
+  background: var(--surface);
+  color: var(--primary-light);
+  border: 2px solid var(--primary-light);
+}
+
+/* Active: EXPENSE — filled red #D05757, white text (exact desktop match) */
+.toggle-chip-expense.active {
+  background: #d05757;
+  color: #ffffff;
+  border-color: #d05757;
+}
+
+/* Active: INCOME — filled teal #4EC9B0, dark text (exact desktop match) */
+.toggle-chip-income.active {
+  background: #4ec9b0;
+  color: #15322e;
+  border-color: #4ec9b0;
+}
+
+/* Hero amount — white card, large coloured number, matches desktop spin box */
+.hero-amount-wrap {
+  margin: 0.35rem 0 0.5rem;
+}
+
+.hero-amount-card {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.55rem 1rem;
+}
+
+.hero-amount-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 2.2rem;
+  font-weight: 700;
+  padding: 0;
+  min-width: 0;
+}
+
+.hero-amount-input:focus {
+  outline: none;
+}
+
+/* Amount colour by type — exact desktop colours */
+.hero-expense { color: #f48771; }
+.hero-income  { color: #4ec9b0; }
+
+/* Form section divider */
+.form-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 0.6rem 0;
+}
+
+/* QFormLayout-style rows — label left, control right */
+.qform-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1rem;
+}
+
+.qform-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* Small "Account currency: USD" label below account field */
+.account-currency-hint {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.1rem;
+}
+
+/* FX fields visible but disabled when FX off — matches desktop (always shown, just greyed) */
+.fx-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1rem;
+}
+
+.text-input:disabled,
+select.text-input:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* "More details" link-style toggle */
+.details-toggle-link {
+  background: none;
+  border: none;
+  color: var(--primary-light);
+  cursor: pointer;
+  font-size: 0.82rem;
+  padding: 0.25rem 0;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-align: left;
+  display: block;
+}
+
+/* Note textarea — limited height like desktop (max 90px) */
+.note-textarea {
+  max-height: 5.5rem;
+  resize: vertical;
+}
+
+/* Transaction form action buttons — BOTH outlined blue pills, same style as desktop */
+.tx-action-btn {
+  flex: 1;
+  background: var(--surface);
+  color: var(--primary-light);
+  border: 2px solid var(--primary-light);
+  border-radius: var(--radius-pill);
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+
+.tx-action-btn:hover:not(:disabled) {
+  background: var(--primary-light);
+  color: #ffffff;
+}
+
+.tx-action-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Responsive
+   ───────────────────────────────────────────────────────────── */
+@media (max-width: 400px) {
+  .qform-grid,
+  .fx-row {
+    grid-template-columns: 1fr;
+  }
+  .kpi-value {
+    font-size: 0.95rem;
+  }
+}
