@@ -32,6 +32,7 @@ export interface CategoryOption extends SyncEntity {
   name: string
   type: TransactionKind
   parent_id: number | null
+  parent_global_id?: string | null
   color?: string
   icon?: string
   is_savings?: boolean

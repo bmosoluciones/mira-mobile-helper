@@ -12,9 +12,9 @@ export const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: '/', redirect: '/capture' },
-    { path: '/setup', component: SetupView },
-    { path: '/capture', component: CaptureView },
-    { path: '/pending', component: PendingView },
-    { path: '/settings', component: SettingsView },
+    { path: '/setup', component: SetupView, meta: { title: 'Setup', hideChrome: true } },
+    { path: '/capture', component: CaptureView, meta: { title: 'Captura', root: true } },
+    { path: '/pending', component: PendingView, meta: { title: 'Sync', root: true } },
+    { path: '/settings', component: SettingsView, meta: { title: 'Ajustes', root: true } },
   ],
 })

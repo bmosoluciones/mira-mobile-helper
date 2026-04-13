@@ -21,21 +21,33 @@ const syncStore = useSyncStore()
 const transactionsStore = useTransactionsStore()
 
 const isReady = ref(false)
-const isDark = computed(() => preferencesStore.theme === 'dark')
-const captureTarget = computed(() => (masterDataStore.hasInitialMasterData ? '/capture' : '/setup'))
+const currentTitle = computed(() => String(route.meta.title ?? t('app.title')))
+const showChrome = computed(() => !route.meta.hideChrome)
+const canGoBack = computed(() => !route.meta.root && route.path !== '/setup')
+const syncBadgeLabel = computed(() => {
+  if (syncStore.isSyncing) {
+    return 'Sync'
+  }
+  if (transactionsStore.pendingCount > 0) {
+    return `${transactionsStore.pendingCount}`
+  }
+  if (syncStore.lastSuccessfulSyncAt) {
+    return 'OK'
+  }
+  return '!'
+})
 
-async function onToggleTheme(): Promise<void> {
+function enforceSetupRoute(): void {
   if (!isReady.value) {
     return
   }
-  await preferencesStore.save({ theme: isDark.value ? 'light' : 'dark' })
-}
-
-function enforceSetupRoute(): void {
-  if (!isReady.value || masterDataStore.hasInitialMasterData || route.path !== '/capture') {
+  if (masterDataStore.hasInitialMasterData && route.path === '/setup') {
+    void router.replace('/capture')
     return
   }
-  void router.replace('/setup')
+  if (!masterDataStore.hasInitialMasterData && route.path !== '/setup') {
+    void router.replace('/setup')
+  }
 }
 
 onMounted(async () => {
@@ -53,40 +65,47 @@ watch(() => [route.path, masterDataStore.hasInitialMasterData, isReady.value], e
 </script>
 
 <template>
-  <div class="app-shell">
-    <header class="app-header">
-      <div class="header-brand">
-        <span class="brand-icon">🤖</span>
-        <span class="brand-name">{{ t('app.title') }}</span>
-      </div>
-      <div class="header-actions">
-        <RouterLink class="header-icon-link" to="/settings" :title="t('settings.title')" :aria-label="t('settings.title')">
-          ⚙
-        </RouterLink>
-        <button class="theme-toggle" :disabled="!isReady" :title="isDark ? t('theme.toLightMode') : t('theme.toDarkMode')" @click="onToggleTheme">
-          {{ isDark ? '☀️' : '🌙' }}
+  <div class="app-shell" :data-theme="preferencesStore.theme">
+    <header v-if="showChrome" class="topbar">
+      <div class="topbar__leading">
+        <button v-if="canGoBack" class="icon-button" type="button" @click="router.back()">
+          &lt;
         </button>
+        <button v-else class="icon-button icon-button--ghost" type="button">
+          =
+        </button>
+        <div class="topbar__title">
+          <span class="topbar__brand">MIRA</span>
+          <strong>{{ currentTitle }}</strong>
+        </div>
       </div>
+      <RouterLink class="sync-pill" to="/pending">
+        <span>{{ syncStore.isSyncing ? 'Experimental' : 'Sync' }}</span>
+        <strong>{{ syncBadgeLabel }}</strong>
+      </RouterLink>
     </header>
 
-    <main v-if="isReady" class="main-content">
+    <main v-if="isReady" class="page-shell">
       <RouterView />
     </main>
-    <main v-else class="main-content">
-      <p class="hint">{{ t('app.loading') }}</p>
+    <main v-else class="page-shell">
+      <section class="card empty-state">
+        <h2>Cargando MIRA Helper...</h2>
+      </section>
     </main>
 
-    <nav class="bottom-nav" role="navigation" :aria-label="t('nav.label')">
-      <RouterLink class="nav-item" active-class="active" :to="captureTarget">
-        <span class="nav-icon" aria-hidden="true">➕</span>
-        <span class="nav-label">{{ t('nav.capture') }}</span>
+    <nav v-if="preferencesStore.setupCompleted && showChrome" class="bottom-nav bottom-nav--helper" :aria-label="t('nav.label')">
+      <RouterLink class="nav-link" to="/capture">
+        <span class="nav-link__icon">C</span>
+        <span>{{ t('nav.capture') }}</span>
       </RouterLink>
-      <RouterLink class="nav-item" active-class="active" to="/pending">
-        <span class="nav-icon" aria-hidden="true">≡</span>
-        <span class="nav-label">{{ t('nav.pending') }}</span>
-        <span v-if="transactionsStore.pendingCount > 0" class="nav-badge" :aria-label="t('nav.pendingBadge', { count: transactionsStore.pendingCount })">
-          {{ transactionsStore.pendingCount }}
-        </span>
+      <RouterLink class="nav-link" to="/pending">
+        <span class="nav-link__icon">S</span>
+        <span>Sync</span>
+      </RouterLink>
+      <RouterLink class="nav-link" to="/settings">
+        <span class="nav-link__icon">A</span>
+        <span>Ajustes</span>
       </RouterLink>
     </nav>
   </div>

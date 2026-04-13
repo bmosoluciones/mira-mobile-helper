@@ -1,53 +1,103 @@
 # MIRA Mobile Helper
 
-Aplicacion accesoria para Android construida con Vue 3, TypeScript y Capacitor.
+Auxiliary Android capture client for MIRA Desktop.
 
-## Objetivo
+`app/mobile-helper` remains the lightweight companion app used to record transactions quickly and sync them back to desktop. It now follows the same visual language as `app/mobile` so users see one coherent product family.
 
-- Capturar transacciones "on the go" sin depender del escritorio.
-- Mantener una cola temporal local de transacciones pendientes.
-- Sincronizar por LAN con MIRA Desktop usando QR, pairing temporal y Zeroconf.
-- Descargar master data desde escritorio y subir transacciones del helper hacia MIRA.
+## Scope
+
+The helper is intentionally smaller than `app/mobile`.
+
+It is built for:
+
+- quick transaction capture
+- local temporary queue management
+- LAN pairing and sync with desktop
+- natural-language assistance for income and expense entry
+
+It does not own the full mobile product scope. In particular, it does not manage:
+
+- full account/category/tag CRUD
+- advanced analysis
+- desktop reports
+- local AI or `.gguf` features
+
+## Relationship To MIRA Mobile
+
+- `app/mobile` is the new private mobile product
+- `app/mobile-helper` is the companion capture client
+- both apps should feel visually consistent
+- transaction entry and edit should follow the same interaction order and form language
+
+This means users can move between helper and full mobile without relearning the transaction form.
 
 ## Stack
 
 - Vue 3
+- TypeScript
 - Pinia
 - Vue Router
 - vue-i18n
 - Capacitor Android
 - `@capacitor-community/sqlite`
 
-## Flujo principal
+## Main Flow
 
-1. En el primer inicio, elegir idioma y tema.
-2. Abrir MIRA Desktop y activar `Mobil > Sincronizar`.
-3. Escanear el QR del escritorio desde el helper Android. Como fallback, copiar el codigo temporal o pegar el payload JSON.
-4. Tocar `Sincronizar datos`.
-5. El helper prueba primero el `host` del QR, luego las `advertised_addresses` del payload y finalmente los servicios Zeroconf o el desktop emparejado previamente.
-6. El helper descarga master data y sube los pendientes al primer host LAN que responda correctamente.
+1. Open the helper.
+2. Complete initial setup.
+3. Pair with desktop using QR or pairing payload.
+4. Download master data from desktop.
+5. Capture transactions locally.
+6. Push pending transactions to desktop over the local experimental sync flow.
 
-## Comandos
+## Sync Notes
+
+- Sync is experimental.
+- The contract remains `v1`.
+- The contract is private.
+- Desktop remains the authority for helper master data.
+- Accepted helper transactions are removed from the local pending queue.
+
+The helper must remain compatible with desktop even while desktop evolves to support the fuller sync behavior required by `app/mobile`.
+
+## Development
+
+Most helper work can be developed with Node.js alone:
 
 ```bash
 npm install
 npm test
 npm run build
-npm run android:sync
-npm run android:open
 ```
 
-## Notas
+For Capacitor workflow:
 
-- El almacenamiento local del helper es temporal.
-- Las transacciones aceptadas por escritorio se eliminan de la lista pendiente local.
-- La captura de transacciones se bloquea hasta descargar una master data inicial usable con cuentas y categorias.
-- Cuentas, categorias y etiquetas son master data bajo gobierno de MIRA Desktop; el helper movil no las crea, edita ni elimina.
-- El menu de configuracion permite cambiar idioma y tema despues del setup inicial.
-- La pantalla de transacciones muestra un contador discreto de dias desde la ultima sincronizacion exitosa.
-- La discovery Zeroconf usa un plugin Android nativo basado en NSD.
-- El QR codifica el mismo `pairing_payload` local visible en el dialogo desktop.
-- El helper conserva el fallback manual para casos de camara denegada, QR expirado o permisos de red revocados por el usuario.
-- La master data local del helper conserva `global_id`, `sync_version` y `master_data_updated_at`
-  para rechazar referencias viejas de forma segura.
-- La documentacion inicial propia del helper vive en `tools/mobile-helper/docs/`.
+```bash
+npm run android:sync
+```
+
+## Android Studio
+
+Android Studio is mainly needed for native Android tasks:
+
+- opening the generated native project
+- emulator and device debugging
+- Gradle and SDK management
+- APK or AAB generation
+
+For normal Vue and TypeScript work, Node.js is enough most of the time.
+
+## UX Direction
+
+The helper now tracks the look and feel of `app/mobile`:
+
+- same top bar and bottom navigation language
+- same card system
+- same button hierarchy
+- same overall tone for transaction entry
+
+That consistency is intentional and should be preserved when helper screens are updated.
+
+## License
+
+`app/mobile-helper` is GPLv3-or-later.
