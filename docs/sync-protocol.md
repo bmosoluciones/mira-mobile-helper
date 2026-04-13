@@ -2,20 +2,23 @@
 
 ## Estado del contrato
 
-El contrato entre `src/mira` (desktop) y `tools/mobile-helper` (movil) esta cerrado para
-la fase actual de sincronizacion unidireccional `mobile → desktop`. Todos los puntos
+El contrato entre `app/desktop` y `app/mobile-helper` se mantiene en la misma familia
+de protocolo privada y experimental `v1` que usa `app/mobile`, pero el helper consume
+solo el subconjunto necesario para captura rapida y envio.
+
+En la fase actual, el helper opera principalmente en un flujo `mobile -> desktop`. Los puntos
 siguientes estan implementados y probados:
 
 | Punto del contrato | Estado |
 |----|---|
-| Desktop expone el servicio | ✅ `MobileSyncServer` con HTTPS, TLS efimero, mDNS |
-| Movil descubre el servicio en red local | ✅ Plugin `ZeroconfDiscovery` via Android NSD |
-| Sin fugas hacia el exterior | ✅ `_ensure_lan_client` bloquea cualquier IP no LAN/loopback |
-| Movil envia transacciones (crear/actualizar) | ✅ `POST /api/mobile/v1/transactions/push` |
-| Movil actualiza transacciones | ✅ operacion `update` con `base_version` para control de conflictos |
-| Confirmacion del resultado de sincronizacion | ✅ evento en el servidor + `statusMessage` en el cliente |
-| Metodo de sincronizacion robusto | ✅ reintentos multi-host, manejo de conflictos, rate limiting, TLS pinning |
-| Preparado para sincronizacion bidireccional futura | ✅ endpoints `changes` y `ack` con cursor ya implementados |
+| Desktop expone el servicio | OK `MobileSyncServer` con HTTPS, TLS efimero y mDNS |
+| Movil descubre el servicio en red local | OK Plugin `ZeroconfDiscovery` via Android NSD |
+| Sin fugas hacia el exterior | OK `_ensure_lan_client` bloquea cualquier IP no LAN/loopback |
+| Movil envia transacciones (crear/actualizar) | OK `POST /api/mobile/v1/transactions/push` |
+| Movil actualiza transacciones | OK operacion `update` con `base_version` para control de conflictos |
+| Confirmacion del resultado de sincronizacion | OK evento en el servidor + `statusMessage` en el cliente |
+| Metodo de sincronizacion robusto | OK reintentos multi-host, manejo de conflictos, rate limiting y TLS pinning |
+| Capacidades opcionales de cursor disponibles | OK `changes` y `ack` existen sin convertir al helper en full mirror |
 
 ---
 
@@ -42,7 +45,7 @@ siguientes estan implementados y probados:
 - En Flatpak y Snap se espera acceso de red habilitado para la sincronizacion local: Flatpak usa `--share=network` y Snap usa `network` + `network-bind`.
 - No se requiere `network-observe`; el escritorio descubre IPs mediante sockets UDP locales y resolucion de hostname.
 - `master-data` es un snapshot completo con `master_data_updated_at` y `global_id`
-  para cuentas, categorias, etiquetas y metas.
+  para cuentas, categorias y etiquetas requeridas por el flujo de captura.
 - `transactions/push` envia creates y updates usando `account_global_id`,
   `category_global_id`, `tag_global_ids`, `sync_id`, `base_version` y el
   marcador `master_data_base_at`.
@@ -66,12 +69,15 @@ siguientes estan implementados y probados:
   - `transactions-ack`
 - Si faltan capacidades obligatorias, el helper falla con error de negociacion.
 - Si faltan capacidades opcionales, el helper conserva sincronizacion unidireccional (`push`) sin marcar error.
+- `app/mobile` comparte esta misma familia de protocolo, pero consume mas capacidades
+  del servidor para su flujo bidireccional experimental.
 
 ## Alcance funcional actual
 
 - El helper movil es cliente de captura y envio (`mobile -> desktop`).
 - El helper no aplica sincronizacion bilateral ni replica cambios del desktop como espejo funcional en esta fase.
-- El uso de `changes/ack` queda como extension de protocolo para evolucion futura del desktop.
+- El uso de `changes/ack` no convierte al helper en espejo funcional del desktop; esas
+  capacidades solo mantienen abierta la evolucion del protocolo y el manejo de cursor.
 - El protocolo soporta operaciones `create`, `update` y `delete`. En esta fase el helper movil
   solo emite `create` y `update`; la operacion `delete` esta reservada para la fase bidireccional.
 
@@ -83,3 +89,5 @@ siguientes estan implementados y probados:
   `masterDataBaseAt` y el desktop emparejado sin perder pendientes.
 - El `pairedDesktop` guardado preserva `transportScheme` y `tlsFingerprintSha256`
   para que la reconexion TLS funcione correctamente sin re-escanear el QR.
+
+Para la comparacion completa con `app/mobile`, revisa [la guia central del workspace](../../../docs/relacion-entre-apps.md).

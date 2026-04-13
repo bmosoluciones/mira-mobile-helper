@@ -4,6 +4,8 @@ Auxiliary Android capture client for MIRA Desktop.
 
 `app/mobile-helper` remains the lightweight companion app used to record transactions quickly and sync them back to desktop. It now follows the same visual language as `app/mobile` so users see one coherent product family.
 
+For the cross-app relationship and sync split between desktop, mobile, and helper, see the workspace guide: [Relacion entre apps](../../docs/relacion-entre-apps.md).
+
 ## Scope
 
 The helper is intentionally smaller than `app/mobile`.
@@ -55,6 +57,7 @@ This means users can move between helper and full mobile without relearning the 
 - Sync is experimental.
 - The contract remains `v1`.
 - The contract is private.
+- The helper shares the same base protocol family as `app/mobile`, but only consumes the subset needed for helper capture flows.
 - Desktop remains the authority for helper master data.
 - Accepted helper transactions are removed from the local pending queue.
 
