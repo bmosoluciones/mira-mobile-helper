@@ -65,14 +65,16 @@ public class PinnedHttpPlugin extends Plugin {
                     payload.put("body", response.body() != null ? response.body().string() : "");
                     call.resolve(payload);
                 }
-            } catch (CertificateException exception) {
-                call.reject(
-                    "TLS certificate fingerprint mismatch.",
-                    "certificate_pin_mismatch",
-                    exception
-                );
             } catch (IOException exception) {
-                call.reject("Pinned HTTP request failed: " + exception.getMessage(), "network_error", exception);
+                if (isCertificateMismatch(exception)) {
+                    call.reject(
+                        "TLS certificate fingerprint mismatch.",
+                        "certificate_pin_mismatch",
+                        exception
+                    );
+                } else {
+                    call.reject("Pinned HTTP request failed: " + exception.getMessage(), "network_error", exception);
+                }
             } catch (NoSuchAlgorithmException | KeyManagementException exception) {
                 call.reject("Pinned HTTP initialization failed: " + exception.getMessage(), "internal_error", exception);
             }
@@ -103,7 +105,7 @@ public class PinnedHttpPlugin extends Plugin {
             Iterator<String> iterator = headersObject.keys();
             while (iterator.hasNext()) {
                 String key = iterator.next();
-                String value = String.valueOf(headersObject.get(key));
+                String value = String.valueOf(headersObject.opt(key));
                 headersBuilder.add(key, value);
             }
         }
@@ -119,6 +121,17 @@ public class PinnedHttpPlugin extends Plugin {
             requestBuilder.get();
         }
         return requestBuilder.build();
+    }
+
+    private static boolean isCertificateMismatch(Throwable exception) {
+        Throwable current = exception;
+        while (current != null) {
+            if (current instanceof CertificateException) {
+                return true;
+            }
+            current = current.getCause();
+        }
+        return false;
     }
 
     private static class FingerprintTrustManager implements X509TrustManager {
